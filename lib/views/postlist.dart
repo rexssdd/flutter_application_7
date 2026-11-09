@@ -37,7 +37,7 @@ class _PostlistState extends State<Postlist> {
       itemBuilder: (context, index) {
         Userpost post = widget.posts[index];
         return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,7 +56,7 @@ class _PostlistState extends State<Postlist> {
                 child: Image.asset(
                   post.postimg,
                   width: double.infinity,
-                  height: 210,
+                  height: 500,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return const SizedBox(height: 210, child: Center(child: Icon(Icons.image, size: 60)));

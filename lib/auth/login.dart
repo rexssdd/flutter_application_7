@@ -52,7 +52,7 @@ class _LoginFormState extends State<LoginForm> {
                     children: [
                       Image.asset('assets/logo.png', width: 58, height: 58),
                       const SizedBox(width: 12),
-                      const Text('Social Media', style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
+                      const Text('FaceBook App', style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 36),
