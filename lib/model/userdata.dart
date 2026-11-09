@@ -20,7 +20,7 @@ class Userdata {
       username: 'Mike Johnson',
       time: '5 hrs ago',
       postcontent: 'just finish 1km in 5 mins',
-      postimg: 'assets/post1.jpg',
+      postimg: 'assets/Post5.jpg',
       numcomments: '2',
       numshare: '20',
       isliked: true,

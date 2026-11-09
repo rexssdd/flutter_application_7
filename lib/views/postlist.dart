@@ -53,13 +53,21 @@ class _PostlistState extends State<Postlist> {
               ),
               GestureDetector(
                 onTap: () => openPost(post),
-                child: Image.asset(
-                  post.postimg,
-                  width: double.infinity,
-                  height: 500,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const SizedBox(height: 210, child: Center(child: Icon(Icons.image, size: 60)));
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Image.asset(
+                      post.postimg,
+                      width: constraints.maxWidth,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const SizedBox(
+                          height: 210,
+                          child: Center(
+                            child: Icon(Icons.image, size: 60),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ),
