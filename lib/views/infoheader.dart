@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
-class InfoHeader extends StatelessWidget {const InfoHeader({super.key});
- @override Widget build(BuildContext context) => const Card(child:Padding(padding:EdgeInsets.symmetric(vertical:18),child:Row(mainAxisAlignment:MainAxisAlignment.spaceEvenly,children:[_Stat('Followers','1.2K'),_Stat('Following','340'),_Stat('Posts','3')])));
-}
-class _Stat extends StatelessWidget {const _Stat(this.label,this.value);final String label,value;
- @override Widget build(BuildContext context)=>Column(children:[Text(value,style:const TextStyle(fontSize:18,fontWeight:FontWeight.bold)),Text(label)]);
+import '../model/account.dart';
+
+class Infoheader extends StatelessWidget {
+  final Account account;
+  const Infoheader({super.key, required this.account});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          buildCount('Followers', account.followers),
+          buildCount('Following', account.following),
+          buildCount('Posts', account.posts),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCount(String title, int count) {
+    return Column(
+      children: [
+        Text(title),
+        const SizedBox(height: 7),
+        Text('$count', style: const TextStyle(fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
 }

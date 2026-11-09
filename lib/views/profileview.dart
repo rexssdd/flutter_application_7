@@ -5,114 +5,170 @@ import '../model/userpost.dart';
 import '../model/usercomment.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({super.key, required this.post, required this.currentUser});
-  final SocialPost post;
-  final String currentUser;
+  final Userpost userPost;
+  const ProfileView({super.key, required this.userPost});
+
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final TextEditingController _commentController = TextEditingController();
-  List<UserComment> _comments = [];
-  bool _loading = true;
-  bool _saving = false;
-
-  String get _storageKey => 'social_comments_${widget.post.id}';
+  TextEditingController commentController = TextEditingController();
+  bool loading = true;
+  bool sending = false;
 
   @override
   void initState() {
     super.initState();
-    _loadComments();
+    loadComments();
   }
 
-  Future<void> _loadComments() async {
+  Future<void> loadComments() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_storageKey);
-      final decoded = raw == null ? <dynamic>[] : jsonDecode(raw) as List<dynamic>;
-      if (!mounted) return;
-      setState(() {
-        _comments = decoded.map((item) => UserComment.fromJson(Map<String,dynamic>.from(item as Map))).toList();
-        _loading = false;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() => _loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to load saved comments.')));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? saved = prefs.getString('comments_${widget.userPost.id}');
+      if (saved != null) {
+        List<dynamic> items = jsonDecode(saved);
+        List<Usercomment> loaded = [];
+        for (var item in items) {
+          loaded.add(Usercomment.fromJson(Map<String, dynamic>.from(item)));
+        }
+        widget.userPost.comments.clear();
+        widget.userPost.comments.addAll(loaded);
+        widget.userPost.numcomments = '${loaded.length}';
+      }
+    } catch (error) {
+      // Show the sample comments if saved data cannot be loaded.
+    }
+    if (mounted) {
+      setState(() { loading = false; });
     }
   }
 
-  Future<void> _addComment() async {
-    final message = _commentController.text.trim();
-    if (message.isEmpty || _saving || _loading) return;
-    setState(() => _saving = true);
-    final updated = [..._comments, UserComment(author: widget.currentUser, message: message, date: DateTime.now().toLocal().toString().substring(0, 16))];
+  Future<void> addComment() async {
+    String message = commentController.text.trim();
+    if (message.isEmpty || sending || loading) return;
+
+    setState(() { sending = true; });
+    List<Usercomment> updated = List.from(widget.userPost.comments);
+    updated.add(Usercomment(commenter: 'You', message: message));
+
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final success = await prefs.setString(_storageKey, jsonEncode(updated.map((comment) => comment.toJson()).toList()));
-      if (!success) throw StateError('Save failed');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<Map<String, dynamic>> items = [];
+      for (Usercomment comment in updated) {
+        items.add(comment.toJson());
+      }
+      bool saved = await prefs.setString(
+        'comments_${widget.userPost.id}',
+        jsonEncode(items),
+      );
+      if (!saved) throw Exception('Unable to save comment');
       if (!mounted) return;
-      setState(() => _comments = updated);
-      _commentController.clear();
+
+      setState(() {
+        widget.userPost.comments.clear();
+        widget.userPost.comments.addAll(updated);
+        widget.userPost.numcomments = '${updated.length}';
+        commentController.clear();
+      });
       FocusScope.of(context).unfocus();
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not save comment. Please retry.')));
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to save comment. Try again.')),
+        );
+      }
     } finally {
-      if (mounted) setState(() => _saving = false);
+      if (mounted) {
+        setState(() { sending = false; });
+      }
     }
   }
 
   @override
   void dispose() {
-    _commentController.dispose();
+    commentController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Post Details')),
-    body: SafeArea(child: Column(children: [
-      Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(backgroundColor: widget.post.color, child: const Icon(Icons.person, color: Colors.white)),
-          title: Text(widget.post.author, style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(widget.post.time),
+  Widget build(BuildContext context) {
+    Userpost post = widget.userPost;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Post Details')),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(backgroundImage: AssetImage(post.userimg)),
+                    title: Text(post.username),
+                    subtitle: Text(post.time),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Text(post.postcontent),
+                  ),
+                  Image.asset(
+                    post.postimg,
+                    width: double.infinity,
+                    height: 230,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox(height: 230, child: Icon(Icons.image, size: 60));
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Text('${post.likes} likes · ${post.comments.length} comments'),
+                  ),
+                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Text('Comments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ),
+                  if (loading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (post.comments.isEmpty)
+                    const Padding(padding: EdgeInsets.all(14), child: Text('No comments yet.'))
+                  else
+                    for (Usercomment comment in post.comments)
+                      ListTile(
+                        leading: const CircleAvatar(child: Icon(Icons.person)),
+                        title: Text(comment.commenter),
+                        subtitle: Text(comment.message),
+                      ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: commentController,
+                      minLines: 1,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        hintText: 'Write a comment...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: sending || loading ? null : addComment,
+                    icon: const Icon(Icons.send, color: Colors.blue),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(widget.post.caption, style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 12),
-        Container(height: 190, color: widget.post.color.withValues(alpha: 0.15), child: Icon(widget.post.icon, size: 90, color: widget.post.color)),
-        const SizedBox(height: 20),
-        Text('Comments (${_comments.length})', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        const Divider(),
-        if (_loading) const Center(child: CircularProgressIndicator())
-        else if (_comments.isEmpty) const Padding(padding: EdgeInsets.all(20), child: Text('No comments yet. Be the first to comment!', textAlign: TextAlign.center))
-        else ..._comments.map((comment) => Card(child: ListTile(
-          leading: const CircleAvatar(child: Icon(Icons.person)),
-          title: Text(comment.author, style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(comment.message),
-            Text(comment.date, style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          ]),
-        ))),
-      ])),
-      Padding(padding: EdgeInsets.fromLTRB(12, 8, 12, MediaQuery.viewInsetsOf(context).bottom > 0 ? 8 : 12), child: Row(children: [
-        Expanded(child: TextField(
-          controller: _commentController,
-          minLines: 1,
-          maxLines: 3,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(hintText: 'Write a comment...', border: OutlineInputBorder(), isDense: true),
-          onSubmitted: (_) => _addComment(),
-        )),
-        const SizedBox(width: 8),
-        IconButton.filled(onPressed: (_loading || _saving) ? null : _addComment, icon: _saving
-          ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-          : const Icon(Icons.send), tooltip: 'Post comment'),
-      ])),
-    ])),
-  );
+      ),
+    );
+  }
 }

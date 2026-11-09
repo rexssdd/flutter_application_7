@@ -1,18 +1,81 @@
-import 'package:flutter/material.dart';
+import 'account.dart';
 import 'friend.dart';
 import 'userpost.dart';
+import 'usercomment.dart';
+
 class Userdata {
-  static const friends = <Friend>[
-    Friend(name:'Alex',imagePath:'assets/person1.png'),
-    Friend(name:'Jamie',imagePath:'assets/person2.png'),
-    Friend(name:'Taylor',imagePath:'assets/person3.png'),
-    Friend(name:'Sam',imagePath:'assets/person4.png'),
-    Friend(name:'Casey',imagePath:'assets/person5.png'),
-    Friend(name:'Jordan',imagePath:'assets/person6.png'),
+  Account myUserAccount = Account(
+    name: 'Rexcel Jay Lusica',
+    email: 'rexceljay@gmail.com',
+    img: 'assets/Profile.jpg',
+    followers: 1200,
+    following: 480,
+    posts: 2,
+  );
+
+  List<Userpost> userList = [
+    Userpost(
+      id: 'post1',
+      userimg: 'assets/Person3.jpg',
+      username: 'Mike Johnson',
+      time: '5 hrs ago',
+      postcontent: 'just finish 1km in 5 mins',
+      postimg: 'assets/post1.jpg',
+      numcomments: '2',
+      numshare: '20',
+      isliked: true,
+      likes: 24,
+      comments: [
+        Usercomment(commenter: 'Alice', message: 'Great job!'),
+        Usercomment(commenter: 'Bob', message: 'Keep it up!'),
+      ],
+    ),
+    Userpost(
+      id: 'post2',
+      userimg: 'assets/Person4.jpg',
+      username: 'Jane Doe',
+      time: '10 hrs ago',
+      postcontent: 'Had a great day at the beach!',
+      postimg: 'assets/post2.jpg',
+      numcomments: '1',
+      numshare: '5',
+      isliked: true,
+      likes: 15,
+      comments: [
+        Usercomment(commenter: 'Charlie', message: 'Nice photo!'),
+      ],
+    ),
+    Userpost(
+      id: 'post3',
+      userimg: 'assets/Person5.jpg',
+      username: 'Ethan',
+      time: '1 day ago',
+      postcontent: 'Meet my Gf',
+      postimg: 'assets/Post3.jpg',
+      numcomments: '3',
+      numshare: '10',
+      isliked: false,
+      likes: 8,
+      comments: [
+        Usercomment(commenter: 'Alice', message: 'Great job!'),
+        Usercomment(commenter: 'Bob', message: 'Keep it up!'),
+        Usercomment(commenter: 'Charlie', message: 'Nice pace!'),
+      ],
+    ),
   ];
-  static List<SocialPost> posts() => [
-    SocialPost(id:'post1',author:'Alex Rivera',caption:'Enjoying a beautiful day with friends!',time:'2 hours ago',color:Colors.lightBlue,icon:Icons.landscape),
-    SocialPost(id:'post2',author:'Jamie Cruz',caption:'A little progress every day goes a long way.',time:'Yesterday',color:Colors.deepPurple,icon:Icons.auto_awesome),
-    SocialPost(id:'post3',author:'Taylor Santos',caption:'Great memories from our weekend adventure!',time:'2 days ago',color:Colors.teal,icon:Icons.park),
+
+  List<Friend> friendList = [
+    Friend(img: 'assets/Person1.jpg', name: 'Alice'),
+    Friend(img: 'assets/Person2.jpg', name: 'Bob'),
+    Friend(img: 'assets/Person3.jpg', name: 'Charlie'),
+    Friend(img: 'assets/Person4.jpg', name: 'Diana'),
+    Friend(img: 'assets/Person5.jpg', name: 'Ethan'),
+    Friend(img: 'assets/Person6.jpg', name: 'Michael'),
+  ];
+
+  List<Usercomment> commentLists = [
+    Usercomment(commenter: 'Alice', message: 'Great job!'),
+    Usercomment(commenter: 'Bob', message: 'Keep it up!'),
+    Usercomment(commenter: 'Charlie', message: 'Nice photo!'),
   ];
 }

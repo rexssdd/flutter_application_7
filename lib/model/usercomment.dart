@@ -1,8 +1,17 @@
-class UserComment {
-  const UserComment({required this.author, required this.message, required this.date});
-  final String author;
-  final String message;
-  final String date;
-  Map<String,String> toJson() => {'author':author,'message':message,'date':date};
-  factory UserComment.fromJson(Map<String,dynamic> json) => UserComment(author: json['author'] as String? ?? 'User',message:json['message'] as String? ?? '',date:json['date'] as String? ?? '');
+class Usercomment {
+  String commenter;
+  String message;
+
+  Usercomment({required this.commenter, required this.message});
+
+  Map<String, dynamic> toJson() {
+    return {'commenter': commenter, 'message': message};
+  }
+
+  factory Usercomment.fromJson(Map<String, dynamic> data) {
+    return Usercomment(
+      commenter: data['commenter']?.toString() ?? '',
+      message: data['message']?.toString() ?? '',
+    );
+  }
 }
