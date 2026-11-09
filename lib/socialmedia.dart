@@ -13,7 +13,7 @@ class Socialmedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Social Media')),
+      appBar: AppBar(title: const Text('FaceBook App')),
       // Only this outer ListView scrolls. Inner lists are not scrollable.
       body: ListView(
         children: [
