@@ -15,34 +15,37 @@ class Friendlist extends StatelessWidget {
         crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 0.82,
+        childAspectRatio: 0.86,
       ),
       itemCount: friends.length,
       itemBuilder: (context, index) {
         Friend friend = friends[index];
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(3),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: ClipOval(
-                        child: Image.asset(
-                          friend.img,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.person, size: 40);
-                          },
-                        ),
-                      ),
+                ClipOval(
+                  child: SizedBox(
+                    width: 76,
+                    height: 76,
+                    child: Image.asset(
+                      friend.img,
+                      width: 76,
+                      height: 76,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const ColoredBox(
+                          color: Color(0xFFE9EDF2),
+                          child: Icon(Icons.person, size: 42),
+                        );
+                      },
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 6),
                 Text(
                   friend.name,
                   maxLines: 1,

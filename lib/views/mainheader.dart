@@ -8,24 +8,16 @@ class Mainheader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
+      child: Column(
         children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: AssetImage(account.img),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(account.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 5),
-                Text(account.email, style: const TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
+          CircleAvatar(radius: 43, backgroundImage: AssetImage(account.img)),
+          const SizedBox(height: 10),
+          Text(account.name, textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 3),
+          Text(account.email, textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: Colors.black54)),
         ],
       ),
     );

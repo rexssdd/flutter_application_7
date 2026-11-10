@@ -47,19 +47,14 @@ class _LoginFormState extends State<LoginForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/logo.png', width: 58, height: 58),
-                      const SizedBox(width: 12),
-                      const Text('FaceBook App', style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  const Icon(Icons.music_note_rounded, size: 76, color: Colors.black),
+                  const SizedBox(height: 6),
+                  const Text('TIKTOKTOK', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: 1)),
                   const SizedBox(height: 36),
                   TextField(
                     controller: usernameController,
                     decoration: const InputDecoration(
-                      labelText: 'Username',
+                      hintText: 'Username',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.person),
                     ),
@@ -69,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
                     controller: passwordController,
                     obscureText: hidePassword,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      hintText: 'Enter Password',
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -88,7 +83,7 @@ class _LoginFormState extends State<LoginForm> {
                   const SizedBox(height: 22),
                   SizedBox(
                     width: double.infinity,
-                    height: 46,
+                    height: 48,
                     child: ElevatedButton(onPressed: login, child: const Text('LOGIN')),
                   ),
                 ],
