@@ -47,9 +47,9 @@ class _LoginFormState extends State<LoginForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.music_note_rounded, size: 76, color: Colors.black),
+                  const Icon(Icons.facebook, size: 76, color: Colors.blue),
                   const SizedBox(height: 6),
-                  const Text('TIKTOKTOK', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: 1)),
+                  const Text('FaceBook App', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: 1)),
                   const SizedBox(height: 36),
                   TextField(
                     controller: usernameController,

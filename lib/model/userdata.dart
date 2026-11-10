@@ -57,8 +57,20 @@ class Userdata {
   ];
 
   List<Usercomment> commentLists = [
-    Usercomment(commenter: 'Alice', message: 'Great job!'),
-    Usercomment(commenter: 'Bob', message: 'Keep it up!'),
-    Usercomment(commenter: 'Charlie', message: 'Nice photo!'),
+    Usercomment(
+      commenter: 'Alice',
+      profileImage: 'assets/person1.jpg',
+      message: 'Great job!',
+    ),
+    Usercomment(
+      commenter: 'Bob',
+      profileImage: 'assets/Person2.jpg',
+      message: 'Keep it up!',
+    ),
+    Usercomment(
+      commenter: 'Charlie',
+      profileImage: 'assets/Person3.jpg',
+      message: 'Nice photo!',
+    ),
   ];
 }
